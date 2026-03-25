@@ -1,18 +1,29 @@
 #pragma once
 
 #include "../utils/include.hpp"
-#include "../lexer/lexer.hpp"
+#include "token.hpp"
 #include "./type.hpp"
 
 struct Expr;
+struct Stmt;
 
 struct Module {
-	vec<Expr*> contents = vec<Expr*>();
+	vec<Stmt*> contents = vec<Stmt*>();
 	void print ();
+};
+
+struct Block {
+	vec<Stmt*> stmts;
 };
 
 struct Identifier {
 	str_view name;
+};
+
+struct IfExpr {
+	Expr* condition;
+	Block* trueBlock;
+	Block* falseBlock;
 };
 
 struct RValue {
@@ -22,12 +33,13 @@ struct RValue {
 struct VarDecl {
 	Identifier variable;
 	enum Kind {
-		Normal,
+		Score,
 		Const,
 		Global,
 		FuncParam,
 		MemberVar,
 	} kind;
+	Expr* initial;
 };
 
 struct FuncDecl {
@@ -78,9 +90,15 @@ struct FuncCall {
 };
 
 struct Expr {
-	std::variant<Literal, Identifier, BinaryOp, UnaryOp, FuncCall> value;
+	std::variant<Literal, Identifier, BinaryOp, UnaryOp, FuncCall, IfExpr> value;
 	Type* type;
-	Token* token;
 	Expr (Token* tkn);
 	void print(u32 depth);
+};
+
+struct Stmt {
+	std::variant<Expr, FuncDecl, VarDecl> value;
+	Token* token;
+	Stmt (Token* tkn);
+	void print();
 };

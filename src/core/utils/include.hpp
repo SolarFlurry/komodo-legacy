@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <format>
 #include <iostream>
+#include <optional>
 
 #include "match.hpp"
 

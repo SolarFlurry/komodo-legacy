@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../utils/include.hpp"
 
 enum TokenType {
@@ -30,10 +32,18 @@ enum TokenType {
 };
 
 struct Token {
-    str value;
+    str lexeme;
     TokenType type;
     u32 line;
     u32 col;
 };
+
+#include "../lexer/lexer.hpp"
+struct Lexer;
+
+Token* newToken(str lexeme, TokenType type, Lexer* lx);
+str typeToString(TokenType);
+void deleteToken(Token*);
+void printToken(Token*);
 
 #undef TokenType_Enum

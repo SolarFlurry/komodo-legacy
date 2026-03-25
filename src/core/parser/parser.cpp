@@ -1,7 +1,4 @@
 #include "parser.hpp"
-#include "../base_definitions/ast.hpp"
-#include "../helper/help.hpp"
-#include "../helper/error.hpp"
 
 Lexer* parseLx;
 
@@ -64,10 +61,42 @@ Module* parse (Lexer* lx) {
 	currentLookahead = 0;
 
 	while (!isEnd(lx)) {
-		program->contents.push_back(parseExpression());
+		program->contents.push_back(parseStmt());
 	}
 
 	return program;
+}
+
+Stmt* parseStmt() {
+	Stmt* stmt;
+	switch (parseToks[0]->type) {
+		case TOK_KEYWORD_SCORE:
+		case TOK_KEYWORD_CONST:
+		case TOK_KEYWORD_GLOB: {
+			// var declaration
+			stmt = new Stmt(parseToks[0]);
+			stmt->value = VarDecl {};
+			switch (parseToks[0]->type) {
+				case TOK_KEYWORD_SCORE: std::get<VarDecl>(stmt->value).kind = VarDecl::Score; break;
+				case TOK_KEYWORD_CONST: std::get<VarDecl>(stmt->value).kind = VarDecl::Const; break;
+				case TOK_KEYWORD_GLOB: std::get<VarDecl>(stmt->value).kind = VarDecl::Global; break;
+				default: // error
+			}
+			consume(parseToks[0]->type);
+			std::get<VarDecl>(stmt->value).variable = Identifier {
+				.name = parseToks[0]->lexeme
+			};
+			consume(TOK_EQ);
+			std::get<VarDecl>(stmt->value).initial = parseExpression();
+		} break;
+		default: {
+			// expr statement
+			stmt = new Stmt(parseToks[0]);
+			stmt->value = *parseExpression();
+		} break;
+	}
+	consume(TOK_SEMICOLON);
+	return stmt;
 }
 
 Expr* parseExpression(int minbp) {

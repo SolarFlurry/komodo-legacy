@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../lexer/lexer.hpp"
+#include "../base_definitions/token.hpp"
 #include <iostream>
 
 using namespace std;

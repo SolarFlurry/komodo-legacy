@@ -1,8 +1,10 @@
 #pragma once
 
-#include "../lexer/lexer.hpp"
 #include "../utils/include.hpp"
 #include "../base_definitions/ast.hpp"
+#include "../base_definitions/token.hpp"
+#include "../lexer/lexer.hpp"
+#include "../helper/error.hpp"
 
 struct BindingPower {
 	u32 left;
@@ -20,6 +22,8 @@ void consume(TokenType type);
 //void match(TokenType type, string lexeme);
 
 Module* parse(Lexer* lx);
+
+Stmt* parseStmt();
 
 Expr* parseExpression(int minbp = 0);
 Expr* parseAtom();

@@ -1,21 +1,34 @@
 #include "ast.hpp"
 
 Expr::Expr(Token* tkn) {
-    this->token = tkn;
     this->type = nullptr;
 }
 
+Stmt::Stmt(Token* tkn): token(tkn), value((Expr)0) {
+    //hajdlasjdl
+}
+
 void Module::print () {
-    for (auto expr : this->contents) {
-        expr->print(0);
+    for (auto stmt : this->contents) {
+        stmt->print();
+    }
+}
+
+void Stmt::print() {
+    std::cout << "Statement -> ";
+    match(this->value) {
+        holds(Expr, &expr) {
+            expr.print(0);
+        }
+        _ {}
     }
 }
 
 void Expr::print(u32 depth) {
-    for (int i = 0; i < depth; i++) {
+    for (int i = 1; i < depth; i++) {
         std::cout << "  ";
     }
-    std::cout << "|-";
+    if (depth > 0) std::cout << "|-";
     match(this->value) {
         holds(Literal, &lit) {
             std::cout << "Literal: \x1b[36m";

@@ -1,6 +1,15 @@
-#include "help.hpp"
+#include "token.hpp"
 
-string typeToString(TokenType type) {
+Token* newToken(str lexeme, TokenType type, Lexer* lx) {
+	Token* tok = new Token;
+	tok->lexeme = lexeme;
+	tok->type = type;
+	tok->line = lx->line;
+	tok->col = lx->col;
+	return tok;
+}
+
+str typeToString(TokenType type) {
 	switch (type) {
 		case TOK_INT: return "INT";
 		case TOK_STRING: return "STRING";
@@ -25,21 +34,6 @@ string typeToString(TokenType type) {
 		case SyntaxError: return "SyntaxError";
 		default: return "UNKNOWN";
 	}
-}
-
-Token* newToken(string lexeme, TokenType type, Lexer* lx) {
-	Token* tok = new Token;
-	tok->lexeme = lexeme;
-	tok->type = type;
-	tok->line = lx->line;
-	tok->col = lx->col;
-	return tok;
-}
-
-Token* newParseToken(TokenType type) {
-	Token* tok = new Token;
-	tok->type = type;
-	return tok;
 }
 
 void deleteToken(Token* tok) {
