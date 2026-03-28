@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repository is archived and will no longer face development. The new Komodo codebase has moved [here](https://github.com/SolarFlurry/komodo)
+
 # Komodo
 
 Reasons I made Komodo:
